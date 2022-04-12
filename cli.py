@@ -4,6 +4,7 @@ import os
 from os.path import dirname, isfile, abspath, join, basename
 import sys
 import ghlib
+import tarfile
 
 
 def download(args):
@@ -13,11 +14,13 @@ def download(args):
   if a is None:
     util.error('No distribution available for tag filter "%s"!' % (args.tag_filter))
 
-  repo.download_asset(a, args.output_dir)
+  repo.download_asset(a, args.output)
 
 def upload(args):
   if not isfile(args.dist):
     util.error('"%s" does not exist!' % (args.dist))
+  if not tarfile.is_tarfile(args.dist):
+    util.error('"%s" is not a tar archive!' % (args.dist))
 
   git = util.Git('.')
   gh = ghlib.GitHub('https://api.github.com', os.environ['GITHUB_TOKEN'])
@@ -114,9 +117,9 @@ def main():
     description='Download a customized CodeQL distribution using the GitHub Releases REST API',
   )
   download_parser.add_argument(
-    '--output-dir',
+    '--output',
     required=True,
-    help='The directory in which to store the downloaded CodeQL distribution',
+    help='The downloaded CodeQL distribution will be stored in this file',
   )
   download_parser.add_argument(
     '--repo-id',

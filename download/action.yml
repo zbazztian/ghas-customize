@@ -1,0 +1,34 @@
+name: 'CodeQL Download'
+description: 'Download a customized CodeQL distribution'
+inputs:
+  output:
+    description: 'The downloaded CodeQL distribution will be stored in this file'
+    required: true
+  repo-id:
+    description: 'The repository id in the format "orgoruser/reponame"'
+    required: true
+  tag-filter:
+    description: 'A tag filter which may contain globs ("*")'
+    default: 'main-*'
+    required: true
+  github-token:
+    description: 'GitHub API token with the required download permissions'
+    required: false
+    default: ${{ github.token }}
+runs:
+  using: "composite"
+  steps:
+    - name: inject
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        INPUT_OUTPUT: ${{ inputs.output }}
+        INPUT_TAG_FILTER: ${{ inputs.tag-filter }}
+        INPUT_REPO_ID: ${{ inputs.repo-id }}
+      run: |
+        python3 \
+          "${{ github.action_path }}/../customize" \
+          "download" \
+          "--output" "$INPUT_OUTPUT" \
+          "--repo-id" "$INPUT_REPO_ID" \
+          "--tag-filter" "$INPUT_TAG_FILTER"
+      shell: bash

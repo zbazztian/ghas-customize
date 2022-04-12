@@ -2,7 +2,6 @@ import requests
 import logging
 import json
 import util
-from os.path import join
 from requests import HTTPError
 import mimetypes
 from fnmatch import fnmatch
@@ -63,7 +62,7 @@ class Repo:
     return None
 
 
-  def download_asset(self, asset, directory):
+  def download_asset(self, asset, outputfile):
     headers=self.gh.default_headers()
     headers['Accept'] = 'application/octet-stream'
 
@@ -79,7 +78,7 @@ class Repo:
 
       r.raise_for_status()
 
-      with open(join(directory, asset['name']), 'wb') as f:
+      with open(outputfile, 'wb') as f:
         for chunk in r.iter_content():
           if chunk:
             f.write(chunk)
