@@ -10,7 +10,7 @@ import zipfile
 import sys
 import shutil
 
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 100
 
 
 def error(msg):

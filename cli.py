@@ -53,8 +53,12 @@ def inject(args):
   )
   if customization_hash != util.get_customization_hash(args.output):
     util.info('Customization hashes of input and output differ. Recreating output...')
+    if args.emit_actions_skipped_output:
+      util.info('::set-output name=skipped::false')
   else:
     util.info('Customization hashes of input and output match. Nothing to do!')
+    if args.emit_actions_skipped_output:
+      util.info('::set-output name=skipped::true')
     return
 
   # execute the user's script
@@ -79,6 +83,11 @@ def main():
     'inject',
     help='Inject customizations into a CodeQL distribution',
     description='Inject customizations into a CodeQL distribution',
+  )
+  inject_parser.add_argument(
+    '--emit-actions-skipped-output',
+    action='store_true',
+    help='Emit the GitHub Actions "skipped" output',
   )
   inject_parser.add_argument(
     '--dist',

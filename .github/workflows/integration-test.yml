@@ -29,6 +29,7 @@ jobs:
         succeed-if-not-exists: true
 
     - name: Inject
+      id: inject
       uses: zbazztian/ghas-customize/inject@main
       with:
         distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
@@ -36,7 +37,7 @@ jobs:
         script: integrationtest/script.py
 
     - name: Upload
+      if: steps.inject.outputs.skipped == 'false'
       uses: zbazztian/ghas-customize/upload@main
       with:
         distribution: codeql-bundle-customized.tar.gz
-        repo-id: zbazztian/ghas-customize

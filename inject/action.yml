@@ -9,11 +9,15 @@ inputs:
     required: true
   output:
     description: 'The customized CodeQL distribution will be emitted to this file path (as a .tar.gz archive)'
-    required: true
+outputs:
+  skipped:
+    description: '"true" if the action did not perform any work due to matching customization hashes. "false" otherwise.'
+    value: ${{ steps.inject.outputs.skipped }}
 runs:
   using: "composite"
   steps:
     - name: inject
+      id: inject
       env:
         INPUT_SCRIPT: ${{ inputs.script }}
         INPUT_DISTRIBUTION: ${{ inputs.distribution }}
@@ -23,5 +27,6 @@ runs:
         "inject" \
         "--dist" "$INPUT_DISTRIBUTION" \
         "--output" "$INPUT_OUTPUT" \
-        "--script" "$INPUT_SCRIPT"
+        "--script" "$INPUT_SCRIPT" \
+        "--emit-actions-skipped-output"
       shell: bash
