@@ -179,4 +179,9 @@ class Repo:
   def upload_latest(self, branch, revision, filepath):
     r = self.get_or_create_release(branch, revision)
     sha = util.sha1sum(filepath)
-    self.upload_asset(r, 'codeql-bundle-%s-%s.tar.gz' % (util.make_date(), sha), filepath)
+    assetname = 'codeql-bundle-%s-%s.tar.gz' % (util.make_date(), sha)
+    for a in r['assets']:
+      if assetname == a['name']:
+        info('"%s" was previously uploaded. Nothing left to do.')
+        return
+    self.upload_asset(r, assetname, filepath)
