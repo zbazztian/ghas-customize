@@ -182,6 +182,6 @@ class Repo:
     assetname = 'codeql-bundle-%s-%s.tar.gz' % (util.make_date(), sha)
     for a in r['assets']:
       if assetname == a['name']:
-        info('"%s" was previously uploaded. Nothing left to do.')
+        util.info('"%s" was previously uploaded. Nothing left to do.')
         return
     self.upload_asset(r, assetname, filepath)
