@@ -37,7 +37,7 @@ jobs:
         script: integrationtest/script.py
 
     - name: Upload
-      if: steps.inject.outputs.skipped == 'false'
+      if: steps.inject.output.skipped == 'false'
       uses: zbazztian/ghas-customize/upload@main
       with:
         distribution: codeql-bundle-customized.tar.gz
