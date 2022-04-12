@@ -1,0 +1,28 @@
+name: 'GHAS Inject'
+description: 'Inject customizations into a CodeQL distribution and/or the standard library to customize the standard queries.'
+inputs:
+  script:
+    description: 'Path to a Python3 customization script with a function "customize()" which takes a single parameter "utils"'
+    required: true
+  distribution:
+    description: 'A directory, a .zip archive or a .tar.gz archive containing a CodeQL distribution'
+    required: true
+  output:
+    description: 'The customized CodeQL distribution will be emitted to this file path (as a .tar.gz archive)'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: inject
+      env:
+        INPUT_SCRIPT: ${{ inputs.script }}
+        INPUT_DISTRIBUTION: ${{ inputs.distribution }}
+        INPUT_OUTPUT: ${{ inputs.output }}
+      run: |
+        python3 \
+          "${{ github.action_path }}/../customize" \
+          "inject" \
+          "--dist" "$INPUT_DISTRIBUTION" \
+          "--output" "$INPUT_OUTPUT" \
+          "--script" "$INPUT_SCRIPT"
+      shell: bash
