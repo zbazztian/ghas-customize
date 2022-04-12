@@ -36,7 +36,6 @@ jobs:
 #        script: integrationtest/script.py
     - run: ls lajsdfljasdlf
       id: blorbo
-      continue-on-error: true
 
     - name: Upload
       if: steps.blorbo.conclusion == 'success'
