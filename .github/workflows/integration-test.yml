@@ -17,30 +17,31 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-#    - name: Initialize CodeQL
-#      id:   codeqltoolchain
-#      uses: github/codeql-action/init@v2
-#
-#    - name: Download
-#      uses: zbazztian/ghas-customize/download@main
-#      with:
-#        output: codeql-bundle-customized.tar.gz
-#        repo-id: zbazztian/ghas-customize
-#        tag-filter: main-*
-#        succeed-if-not-exists: true
-
     - name: fakeittillyoumakeit
+      id:   codeqltoolchain
       run: |
        mkdir distro
        touch distro/codeql
        mkdir distro/tools
+       echo '::set-output name=codeql-path::distro/codeql'
+
+#    - name: Initialize CodeQL
+#      id:   codeqltoolchain
+#      uses: github/codeql-action/init@v2
+#
+    - name: Download
+      uses: zbazztian/ghas-customize/download@main
+      with:
+        output: codeql-bundle-customized.tar.gz
+        repo-id: zbazztian/ghas-customize
+        tag-filter: main-*
+        succeed-if-not-exists: true
 
     - name: Inject
       id: inject
       uses: zbazztian/ghas-customize/inject@main
       with:
-        distribution: distro
-        #distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
+        distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
         output: codeql-bundle-customized.tar.gz
         script: integrationtest/script.py
 
