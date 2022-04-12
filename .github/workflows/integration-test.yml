@@ -41,4 +41,3 @@ jobs:
       uses: zbazztian/ghas-customize/upload@main
       with:
         distribution: codeql-bundle-customized.tar.gz
-        repo-id: zbazztian/ghas-customize
