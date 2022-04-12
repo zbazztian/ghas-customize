@@ -39,10 +39,10 @@ jobs:
     - name: Inject
       id: inject
       run: |
-       echo '::set-output name=skipped::false'
+       echo '::set-output name=skipped::true'
 
     - name: Upload
-      if: steps.inject.output.skipped == 'false'
+      if: steps.inject.outputs.skipped == 'true'
       uses: zbazztian/ghas-customize/upload@main
       with:
         distribution: codeql-bundle-customized.tar.gz
