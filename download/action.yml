@@ -25,10 +25,9 @@ runs:
         INPUT_TAG_FILTER: ${{ inputs.tag-filter }}
         INPUT_REPO_ID: ${{ inputs.repo-id }}
       run: |
-        python3 \
-          "${{ github.action_path }}/../customize" \
-          "download" \
-          "--output" "$INPUT_OUTPUT" \
-          "--repo-id" "$INPUT_REPO_ID" \
-          "--tag-filter" "$INPUT_TAG_FILTER"
+        "${{ github.action_path }}/../customize" \
+        "download" \
+        "--output" "$INPUT_OUTPUT" \
+        "--repo-id" "$INPUT_REPO_ID" \
+        "--tag-filter" "$INPUT_TAG_FILTER"
       shell: bash

@@ -19,10 +19,9 @@ runs:
         INPUT_DISTRIBUTION: ${{ inputs.distribution }}
         INPUT_OUTPUT: ${{ inputs.output }}
       run: |
-        python3 \
-          "${{ github.action_path }}/../customize" \
-          "inject" \
-          "--dist" "$INPUT_DISTRIBUTION" \
-          "--output" "$INPUT_OUTPUT" \
-          "--script" "$INPUT_SCRIPT"
+        "${{ github.action_path }}/../customize" \
+        "inject" \
+        "--dist" "$INPUT_DISTRIBUTION" \
+        "--output" "$INPUT_OUTPUT" \
+        "--script" "$INPUT_SCRIPT"
       shell: bash

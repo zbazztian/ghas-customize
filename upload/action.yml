@@ -20,9 +20,8 @@ runs:
         INPUT_DISTRIBUTION: ${{ inputs.distribution }}
         INPUT_REPO_ID: ${{ inputs.repo-id }}
       run: |
-        python3 \
-          "${{ github.action_path }}/../customize" \
-          "upload" \
-          "--dist" "$INPUT_DISTRIBUTION" \
-          "--repo-id" "$INPUT_REPO_ID"
+        "${{ github.action_path }}/../customize" \
+        "upload" \
+        "--dist" "$INPUT_DISTRIBUTION" \
+        "--repo-id" "$INPUT_REPO_ID"
       shell: bash
