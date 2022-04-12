@@ -20,7 +20,7 @@ jobs:
       uses: github/codeql-action/init@v2
 
     - name: Inject
-      uses: zbazztian/ghas-customization/inject@main
+      uses: zbazztian/ghas-customize/inject@main
       with:
         distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
         output: codeql-bundle-customized.tar.gz
