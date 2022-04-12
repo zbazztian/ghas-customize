@@ -2,7 +2,7 @@ import tempfile
 import glob
 import hashlib
 import subprocess
-from os.path import isfile, join, relpath, islink, isdir, exists, basename, abspath
+from os.path import isfile, join, relpath, islink, isdir, exists, basename, abspath, dirname
 import os
 import tarfile
 from datetime import datetime
@@ -80,19 +80,22 @@ def extract_dist(dirorarchive):
   if isdir(dirorarchive):
     d = dirorarchive
   elif isfile(dirorarchive):
-    d = abspath('codeql-input-distribution')
-    if exists(d):
-      info('Deleting "%s"...' % (d))
-      shutil.rmtree(d)
-    if tarfile.is_tarfile(dirorarchive):
-      info('Extracting .tar.gz archive "%s"...' % (dirorarchive))
-      tar_xf(dirorarchive, d)
-    elif zipfile.is_zipfile(dirorarchive):
-      info('Extracting .zip archive "%s"...' % (dirorarchive))
-      unzip(dirorarchive, d)
+    if basename(dirorarchive) in ['codeql', 'codeql.exe'] and is_dist(dirname(dirorarchive)):
+      d = dirname(dirorarchive)
     else:
-      error('"%s": unsupported input format!' % (dirorarchive))
-    d = join(d, 'codeql')
+      d = abspath('codeql-input-distribution')
+      if exists(d):
+        info('Deleting "%s"...' % (d))
+        shutil.rmtree(d)
+      if tarfile.is_tarfile(dirorarchive):
+        info('Extracting .tar.gz archive "%s"...' % (dirorarchive))
+        tar_xf(dirorarchive, d)
+      elif zipfile.is_zipfile(dirorarchive):
+        info('Extracting .zip archive "%s"...' % (dirorarchive))
+        unzip(dirorarchive, d)
+      else:
+        error('"%s": unsupported input format!' % (dirorarchive))
+      d = join(d, 'codeql')
   else:
     error('File "%s" does not exist!' % (dirorarchive))
 
