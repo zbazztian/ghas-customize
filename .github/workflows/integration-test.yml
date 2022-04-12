@@ -16,25 +16,30 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Initialize CodeQL
-      id:   codeqltoolchain
-      uses: github/codeql-action/init@v2
-
-    - name: Download
-      uses: zbazztian/ghas-customize/download@main
-      with:
-        output: codeql-bundle-customized.tar.gz
-        repo-id: zbazztian/ghas-customize
-        tag-filter: main-*
-        succeed-if-not-exists: true
+#    - name: Initialize CodeQL
+#      id:   codeqltoolchain
+#      uses: github/codeql-action/init@v2
+#
+#    - name: Download
+#      uses: zbazztian/ghas-customize/download@main
+#      with:
+#        output: codeql-bundle-customized.tar.gz
+#        repo-id: zbazztian/ghas-customize
+#        tag-filter: main-*
+#        succeed-if-not-exists: true
+#
+#    - name: Inject
+#      id: inject
+#      uses: zbazztian/ghas-customize/inject@main
+#      with:
+#        distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
+#        output: codeql-bundle-customized.tar.gz
+#        script: integrationtest/script.py
 
     - name: Inject
       id: inject
-      uses: zbazztian/ghas-customize/inject@main
-      with:
-        distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
-        output: codeql-bundle-customized.tar.gz
-        script: integrationtest/script.py
+      run: |
+       echo '::set-output name=skipped::false'
 
     - name: Upload
       if: steps.inject.output.skipped == 'false'
