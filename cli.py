@@ -12,7 +12,12 @@ def download(args):
   repo = gh.getRepo(args.repo_id)
   a = repo.latest_asset(args.tag_filter, 'codeql-bundle-*.tar.gz')
   if a is None:
-    util.error('No distribution available for tag filter "%s"!' % (args.tag_filter))
+    msg = 'No distribution available for tag filter "%s"!' % (args.tag_filter)
+    if args.succeed_if_not_exists:
+      util.info(msg)
+      return
+    else:
+      util.error(msg)
 
   repo.download_asset(a, args.output)
 
@@ -130,6 +135,12 @@ def main():
     '--tag-filter',
     required=True,
     help='A tag filter, which may contain globs ("*").',
+  )
+  download_parser.add_argument(
+    '--succeed-if-not-exists',
+    action='store_true',
+    required=False,
+    help='Do not fail if specified download does not exist',
   )
   download_parser.set_defaults(func=download)
 
