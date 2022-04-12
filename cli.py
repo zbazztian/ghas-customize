@@ -54,7 +54,11 @@ def inject(args):
   if customization_hash != util.get_customization_hash(args.output):
     util.info('Customization hashes of input and output differ. Recreating output...')
   else:
-    util.info('Customization hashes of input and output match. Nothing to do!')
+    msg = 'Customization hashes of input and output match. Nothing to do!'
+    if args.fail_on_skip:
+      util.error(msg)
+    else:
+      util.info(msg)
     return
 
   # execute the user's script
@@ -79,6 +83,11 @@ def main():
     'inject',
     help='Inject customizations into a CodeQL distribution',
     description='Inject customizations into a CodeQL distribution',
+  )
+  inject_parser.add_argument(
+    '--fail-on-skip',
+    action='store_true',
+    help='Return with failure if no work needs to be done',
   )
   inject_parser.add_argument(
     '--dist',
