@@ -11,6 +11,10 @@ inputs:
     description: 'A tag filter which may contain globs ("*")'
     default: 'main-*'
     required: true
+  succeed-if-not-exists:
+    description: 'Do not fail if the specified download is unavailable. "true" or "false". Default ("false")'
+    default: 'false'
+    required: false
   github-token:
     description: 'GitHub API token with the required download permissions'
     required: false
@@ -18,16 +22,22 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: inject
+    - name: download
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_OUTPUT: ${{ inputs.output }}
         INPUT_TAG_FILTER: ${{ inputs.tag-filter }}
         INPUT_REPO_ID: ${{ inputs.repo-id }}
+        INPUT_SUCCEED_IF_NOT_EXISTS: ${{ inputs.succeed-if-not-exists }}
       run: |
+        succeed=""
+        if [ "$INPUT_SUCCEED_IF_NOT_EXISTS" = "true" ]; then
+          succeed="--succeed-if-not-exists"
+        fi
         "${{ github.action_path }}/../customize" \
         "download" \
         "--output" "$INPUT_OUTPUT" \
         "--repo-id" "$INPUT_REPO_ID" \
-        "--tag-filter" "$INPUT_TAG_FILTER"
+        "--tag-filter" "$INPUT_TAG_FILTER" \
+        "$succeed"
       shell: bash
