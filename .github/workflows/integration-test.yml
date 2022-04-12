@@ -27,7 +27,7 @@ jobs:
 
     - name: Initialize CodeQL
       id:   codeqltoolchain
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
 
     - name: Download
       uses: zbazztian/ghas-customize/download@main
