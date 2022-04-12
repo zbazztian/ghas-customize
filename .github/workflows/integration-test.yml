@@ -34,6 +34,8 @@ jobs:
 #        distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
 #        output: codeql-bundle-customized.tar.gz
 #        script: integrationtest/script.py
+    - run: ls lajsdfljasdlf
+      continue-on-error: true
 
     - name: Upload
       uses: zbazztian/ghas-customize/upload@main
