@@ -223,6 +223,13 @@ class ScriptUtils:
         raise subprocess.CalledProcessError('Command "%s" failed with exit code %d' % (commandstr, proc.returncode), command)
 
 
+  def run_tests(self, testdir):
+    self.codeql(
+      'test', 'run',
+      testdir
+    )
+
+
   def rebuild_packs(self, packpattern):
     executed = False
     for path in [p for p in glob.iglob(join(self.distdir, packpattern), recursive=True)]:

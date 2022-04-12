@@ -1,0 +1,9 @@
+# https://codeql.github.com/docs/codeql-cli/about-codeql-packs/
+
+name: zbazztian/java-customization-tests
+groups: [java, test]
+dependencies:
+    codeql/java-all: "*"
+    codeql/java-queries: "*"
+extractor: java
+tests: .

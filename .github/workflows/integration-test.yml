@@ -17,18 +17,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: fakeittillyoumakeit
-      id:   codeqltoolchain
-      run: |
-       mkdir distro
-       touch distro/codeql
-       mkdir distro/tools
-       echo '::set-output name=codeql-path::distro/codeql'
-
-#    - name: Initialize CodeQL
+#    - name: fakeittillyoumakeit
 #      id:   codeqltoolchain
-#      uses: github/codeql-action/init@v2
-#
+#      run: |
+#       mkdir distro
+#       touch distro/codeql
+#       mkdir distro/tools
+#       echo '::set-output name=codeql-path::distro/codeql'
+
+    - name: Initialize CodeQL
+      id:   codeqltoolchain
+      uses: github/codeql-action/init@v2
+
     - name: Download
       uses: zbazztian/ghas-customize/download@main
       with:

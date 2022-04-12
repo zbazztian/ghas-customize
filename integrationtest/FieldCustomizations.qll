@@ -1,3 +1,3 @@
-class InjectionIntegrationTest extends string {
-  InjectionIntegrationTest(){ this = "InjectionIntegrationTest" }
-}
+import java
+
+predicate predicatewhichnormallydoesntexist(int i) { i = 1 }
