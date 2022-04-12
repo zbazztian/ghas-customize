@@ -35,7 +35,8 @@ jobs:
 #        output: codeql-bundle-customized.tar.gz
 #        script: integrationtest/script.py
     - run: |
-       touch codeql-bundle-customized.tar.gz
+       touch codeql-bundle-customized
+       tar czf codeql-bundle-customized.tar.gz codeql-bundle-customized
 
     - name: Upload
       uses: zbazztian/ghas-customize/upload@main
