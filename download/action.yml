@@ -38,5 +38,6 @@ runs:
         "download" \
         "--output" "$INPUT_OUTPUT" \
         "--repo-id" "$INPUT_REPO_ID" \
-        "--tag-filter" "$INPUT_TAG_FILTER" "$succeed"
+        "--tag-filter" "$INPUT_TAG_FILTER" \
+        $succeed
       shell: bash
