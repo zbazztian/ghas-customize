@@ -26,7 +26,7 @@ jobs:
         output: codeql-bundle-customized.tar.gz
         repo-id: zbazztian/ghas-customize
         tag-filter: main-*
-        succeed-if-not-exists: true
+        #succeed-if-not-exists: true
 
     - name: Inject
       uses: zbazztian/ghas-customize/inject@main
