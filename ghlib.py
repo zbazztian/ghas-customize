@@ -156,7 +156,7 @@ class Repo:
 
     with open(filepath, 'rb') as f:
       with requests.post(
-        release['upload_url'].replace('{?name,label}', '') + "?name={name}&label=dist".format(
+        release['upload_url'].replace('{?name,label}', '') + "?name={name}&label={name}".format(
           name=asset_name,
         ),
         data=f,
@@ -179,7 +179,7 @@ class Repo:
   def upload_latest(self, branch, revision, filepath):
     r = self.get_or_create_release(branch, revision)
     sha = util.sha1sum(filepath)
-    assetname = 'codeql-bundle-%s-%s-%s.tar.gz' % ('00000000', revision, sha)
+    assetname = 'codeql-bundle-%s-%s.tar.gz' % (revision, sha[0:7])
     for a in r['assets']:
       if assetname == a['name']:
         util.info('"%s" was previously uploaded. Nothing left to do.')
