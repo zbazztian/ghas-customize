@@ -36,17 +36,18 @@ jobs:
 #      id:   codeqltoolchain
 #      uses: github/codeql-action/init@v1
 
-    - name: Inject
-      id: inject
-      uses: zbazztian/ghas-customize/inject@main
-      with:
-        #distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
-        distribution: codeql-bundle.tar.gz
-        output: codeql-bundle-customized.tar.gz
-        script: integrationtest/script.py
+#    - name: Inject
+#      id: inject
+#      uses: zbazztian/ghas-customize/inject@main
+#      with:
+#        #distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
+#        distribution: codeql-bundle.tar.gz
+#        output: codeql-bundle-customized.tar.gz
+#        script: integrationtest/script.py
 
     - name: Upload
-      if: steps.inject.outputs.skipped == 'false'
+#      if: steps.inject.outputs.skipped == 'false'
       uses: zbazztian/ghas-customize/upload@main
       with:
-        distribution: codeql-bundle-customized.tar.gz
+        #distribution: codeql-bundle-customized.tar.gz
+        distribution: codeql-bundle.tar.gz
