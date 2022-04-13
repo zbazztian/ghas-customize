@@ -25,29 +25,27 @@ jobs:
 #       mkdir distro/tools
 #       echo '::set-output name=codeql-path::distro/codeql'
 
-    - run: |
-       #gh extensions install github/gh-codeql
-       #gh codeql test run java-qltests
-       gh release download --pattern 'codeql-bundle.tar.gz' --repo github/codeql-action
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 #    - name: Initialize CodeQL
 #      id:   codeqltoolchain
 #      uses: github/codeql-action/init@v1
 
-#    - name: Inject
-#      id: inject
-#      uses: zbazztian/ghas-customize/inject@main
-#      with:
-#        #distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
-#        distribution: codeql-bundle.tar.gz
-#        output: codeql-bundle-customized.tar.gz
-#        script: integrationtest/script.py
+    - name: Download
+      run: |
+       gh release download --pattern 'codeql-bundle.tar.gz' --repo github/codeql-action
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Inject
+      id: inject
+      uses: zbazztian/ghas-customize/inject@main
+      with:
+        #distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
+        distribution: codeql-bundle.tar.gz
+        output: codeql-bundle-customized.tar.gz
+        script: integrationtest/script.py
 
     - name: Upload
-#      if: steps.inject.outputs.skipped == 'false'
+      if: steps.inject.outputs.skipped == 'false'
       uses: zbazztian/ghas-customize/upload@main
       with:
-        #distribution: codeql-bundle-customized.tar.gz
-        distribution: codeql-bundle.tar.gz
+        distribution: codeql-bundle-customized.tar.gz
