@@ -25,9 +25,16 @@ jobs:
 #       mkdir distro/tools
 #       echo '::set-output name=codeql-path::distro/codeql'
 
-    - name: Initialize CodeQL
-      id:   codeqltoolchain
-      uses: github/codeql-action/init@v1
+    - run: |
+       #gh extensions install github/gh-codeql
+       #gh codeql test run java-qltests
+       gh release download --pattern 'codeql-bundle.tar.gz' --repo github/codeql-action
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#    - name: Initialize CodeQL
+#      id:   codeqltoolchain
+#      uses: github/codeql-action/init@v1
 
     - name: Download
       uses: zbazztian/ghas-customize/download@main
@@ -41,7 +48,8 @@ jobs:
       id: inject
       uses: zbazztian/ghas-customize/inject@main
       with:
-        distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
+        #distribution: ${{ steps.codeqltoolchain.outputs.codeql-path }}
+        distribution: codeql-bundle.tar.gz
         output: codeql-bundle-customized.tar.gz
         script: integrationtest/script.py
 
