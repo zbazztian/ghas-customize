@@ -6,6 +6,7 @@ inputs:
     required: true
   repo-id:
     description: 'The repository id in the format "orgoruser/reponame"'
+    default: ${{ github.repository }}
     required: true
   tag-filter:
     description: 'A tag filter which may contain globs ("*")'

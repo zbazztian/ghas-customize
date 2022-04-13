@@ -29,11 +29,18 @@ jobs:
 #      id:   codeqltoolchain
 #      uses: github/codeql-action/init@v1
 
-    - name: Download
+    - name: Download Upstream
       run: |
        gh release download --pattern 'codeql-bundle.tar.gz' --repo github/codeql-action
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Download Existing Customization
+      uses: zbazztian/ghas-customize/download@main
+      with:
+        output: codeql-bundle-customized.tar.gz
+        tag-filter: main-releases
+        succeed-if-not-exists: true
 
     - name: Inject
       id: inject
