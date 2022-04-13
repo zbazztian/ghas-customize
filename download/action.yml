@@ -9,7 +9,7 @@ inputs:
     required: true
   tag-filter:
     description: 'A tag filter which may contain globs ("*")'
-    default: 'main-*'
+    default: 'main-releases'
     required: true
   succeed-if-not-exists:
     description: 'Do not fail if the specified download is unavailable. "true" or "false". Default ("false")'

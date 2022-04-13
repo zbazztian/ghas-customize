@@ -21,8 +21,8 @@ def sort_by_created_at(releasesorassets):
   )
 
 
-def make_tag(branch, revision):
-  return '%s-%s' % (branch, revision)
+def make_tag(branch):
+  return '%s-releases' % (branch)
 
 
 class GitHub:
@@ -169,7 +169,7 @@ class Repo:
 
 
   def get_or_create_release(self, branch, revision):
-    tag = make_tag(branch, revision)
+    tag = make_tag(branch)
     r = self.get_release(tag)
     if r is None:
       r = self.create_release(tag, revision)
@@ -179,7 +179,7 @@ class Repo:
   def upload_latest(self, branch, revision, filepath):
     r = self.get_or_create_release(branch, revision)
     sha = util.sha1sum(filepath)
-    assetname = 'codeql-bundle-%s-%s.tar.gz' % (util.make_date(), sha)
+    assetname = 'codeql-bundle-%s-%s-%s.tar.gz' % ('00000000', revision, sha)
     for a in r['assets']:
       if assetname == a['name']:
         util.info('"%s" was previously uploaded. Nothing left to do.')
