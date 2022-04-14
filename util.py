@@ -1,3 +1,4 @@
+import re
 import tempfile
 import glob
 import hashlib
@@ -38,6 +39,37 @@ def hashstr(s):
   sha1 = hashlib.sha1()
   sha1.update(s.encode("utf-8"))
   return sha1.hexdigest()
+
+
+def file2str(filepath):
+  with open(filepath, 'r') as f:
+    return f.read()
+
+
+def str2file(filepath, string):
+  with open(filepath, 'w') as f:
+    f.write(string)
+
+
+QLPACK_DEPENDENCIES_PATTERN = re.compile('^(dependencies:\s*)$', re.MULTILINE)
+
+def add_dependency_to_pack(packdir, dependency):
+  qlpackyml = join(packdir, 'qlpack.yml')
+  str2file(qlpackyml, re.sub(QLPACK_DEPENDENCIES_PATTERN, '\g<1>\n  %s' % (dependency), file2str(qlpackyml)))
+
+
+QLPACK_VERSION_PATTERN = re.compile('^(version:\s+)(\S+)(.*)$', re.MULTILINE)
+
+def get_pack_version(packdir):
+  vmatch = QLPACK_VERSION_PATTERN.search(file2str(join(packdir, 'qlpack.yml')))
+  return vmatch.group(2) if vmatch else None
+
+
+QLPACK_NAME_PATTERN = re.compile('^(name:\s+)(\S+)(.*)$', re.MULTILINE)
+
+def get_pack_name(packdir):
+  nmatch = QLPACK_NAME_PATTERN.search(file2str(join(packdir, 'qlpack.yml')))
+  return nmatch.group(2) if nmatch else None
 
 
 class Git:
@@ -230,6 +262,19 @@ class ScriptUtils:
     )
 
 
+  def add_dependency_to_packs(self, packdirpattern, dependency):
+    for packdir in [p for p in glob.iglob(join(self.distdir, packdirpattern), recursive=True)]:
+      add_dependency_to_pack(packdir, dependency)
+
+
+  def pack_name(self, packdir):
+    return get_pack_name(packdir)
+
+
+  def pack_version(self, packdir):
+    return get_pack_version(packdir)
+
+
   def rebuild_packs(self, packpattern):
     executed = False
     for path in [p for p in glob.iglob(join(self.distdir, packpattern), recursive=True)]:
@@ -261,20 +306,25 @@ class ScriptUtils:
     info(msg)
 
 
-  def copy2dir(self, srcpath, dstdirpattern):
+  def makedirs(self, dstpath):
+    os.makedirs(join(self.distdir, dstpath), exist_ok=True)
+
+
+  def copy2dir(self, srcpattern, dstdirpattern):
     executed = False
-    for dstdir in [d for d in glob.iglob(join(self.distdir, dstdirpattern), recursive=True)]:
-      if not isdir(dstdir):
-        self.error('"%s" is not a directory!' % (dstdir))
-      dstpath = join(dstdir, basename(srcpath))
-      if isfile(srcpath) or islink(srcpath):
-        shutil.copyfile(srcpath, dstpath, follow_symlinks=False)
-      else:
-        shutil.copytree(srcpath, dstpath, symlinks=True, dirs_exist_ok=True)
-      executed = True
+    for srcfile in [s for s in glob.iglob(srcpattern, recursive=True)]:
+      for dstdir in [d for d in glob.iglob(join(self.distdir, dstdirpattern), recursive=True)]:
+        if not isdir(dstdir):
+          self.error('"%s" is not a directory!' % (dstdir))
+        dstpath = join(dstdir, basename(srcfile))
+        if isfile(srcfile) or islink(srcfile):
+          shutil.copyfile(srcfile, dstpath, follow_symlinks=False)
+        else:
+          shutil.copytree(srcfile, dstpath, symlinks=True, dirs_exist_ok=True)
+        executed = True
 
     if not executed:
-      self.error('copy2dir("%s", "%s") had no effect!' % (srcpath, dstdirpattern))
+      self.error('copy2dir("%s", "%s") had no effect!' % (srcpattern, dstdirpattern))
 
 
   def append(self, srcfile, dstfilepattern):
